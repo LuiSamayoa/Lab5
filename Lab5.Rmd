@@ -1,0 +1,92 @@
+---
+title: "Lab5-wrangling"
+output: html_document
+---
+
+#Lab5 - Lubrydate
+
+library(lubridate)
+library(dplyr)
+
+##Calculo del proximo eclipse total
+```{r}
+Eclipse_2017 <- mdy_hms("Aug 27 2017 18:26:40")
+Synodic_month <-   days(29)+hours(12)+minutes(44)+seconds(3)
+Saros<- 223*Synodic_month
+
+prox_eclipseT <- Eclipse_2017+Saros
+print(prox_eclipseT)
+```
+
+
+
+##Agrupacion y Operaciones con fechas
+```{r}
+library(readxl)
+data <- read_excel("~/GitHub/DataWrangling/Lubridate-Date&Time/Laboratorio5/Laboratorio 5/data.xlsx")
+View(data)
+
+```
+
+
+##Tu signo zodiacal
+```{r}
+signo_zodiacal<-function(cumple){
+  cumple <-dmy(cumple)
+  if(cumple == ymd(year()/01/21)%within%ymd(year()/02/19)){
+    return("Acuario")
+  }
+  if(cumple == ymd(year()/02/20)%within%ymd(year()/03/20)){
+    return("Piscis")
+  }
+  if(cumple == ymd(year()/03/21)%within%ymd(year()/04/20)){
+    return("Aries")
+  }
+  if(cumple == ymd(year()/04/21)%within%ymd(year()/05/21)){
+    return("Tauro")
+  }
+  if(cumple == ymd(year()/05/22)%within%ymd(year()/06/21)){
+    return("Geminis")
+  }
+  if(cumple == ymd(year()/06/22)%within%ymd(year()/07/22)){
+    return("Cancer")
+  }
+  if(cumple == ymd(year()/07/23)%within%ymd(year()/08/23)){
+    return("Leo")
+  }
+  if(cumple == ymd(year()/08/24)%within%ymd(year()/09/23)){
+    return("Virgo")
+  }
+  if(cumple == ymd(year()/09/24)%within%ymd(year()/10/23)){
+    return("Libra")
+  }
+  if(cumple == ymd(year()/10/24)%within%ymd(year()/11/22)){
+    return("Escorpio")
+  }
+  if(cumple == ymd(year()/11/23)%within%ymd(year()/12/21)){
+    return("Sagitario")
+  }
+}  
+```
+
+
+##Flights
+```{r}
+library(nycflights13)
+
+flights$adj_dep_time <- format(strptime(sprintf('%04d',flights$dep_time),format = '%H%M')
+                               ,'%H:%M')
+
+flights$adj_arr_time <- format(strptime(sprintf('%04d',flights$arr_time), format = '%H%M'),
+                               '%H:%M')
+flights$adj_sched_dep_time <- format(strptime(sprintf('%04d',flights$sched_dep_time), format = '%H%M'),
+                               '%H:%M')
+flights$adj_sched_arr_time <- format(strptime(sprintf('%04d',flights$sched_arr_time), format = '%H%M'),
+                               '%H:%M')
+
+Delay_salida<-adj_dep_time - adj_sched_dep_time
+Delay_entrada <- adj_arr_time - adj_sched_arr_time
+Total_delay <- Delay_salida + Delay_entrada
+print(Total_delay)
+```
+
